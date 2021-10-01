@@ -1,0 +1,47 @@
+system {
+    extern = _range, _n, _size
+    spawn = Robot: _n
+}
+
+# left and right stigmergies model distance sensors
+
+stigmergy Beacon {
+    link =
+        abs(pos of c1 - pos of c2) <=  _range
+
+    beacon: -1
+}
+
+
+agent Robot {
+
+    interface = pos: 0.._size
+    stigmergies = Left; Right
+
+    MoveTowardsBeacon =
+        (beacon != pos -> 
+            # Choose shortest route
+            ( abs(pos - beacon) < _size - 1 - abs(pos - beacon) ->
+                # Go left
+                pos <- pos - 1; MoveTowardsBeacon)
+            ++
+            ( abs(pos - beacon) > _size - 1 - abs(pos - beacon) ->
+                # Go right
+                pos <- pos + 1; MoveTowardsBeacon)
+        )
+        ++
+        (beacon = pos -> Skip)
+
+    Behavior =
+        beacon <~ pos; (beacon != pos -> 
+            
+
+        )); Behavior
+
+}
+
+check {
+    P1 = 
+        finally forall Robot a, forall Robot b,
+            pos of a = pos of b
+}

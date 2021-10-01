@@ -1,0 +1,57 @@
+# Adapted from 
+# https://peregrine.model.in.tum.de/demo/
+# ("Majority voting" example)
+# Original description:
+# This protocol takes a majority vote. More precisely, it computes whether there
+# are initially more agents in state Y than N.
+
+# 0 = N, 1 = Y, 2 = n, 3 = y
+
+system {
+    extern = _yes, _no
+    environment = agent: -1; message: -1; responder: -1; lock: 0
+    spawn = Yes: _yes, No: _no
+    Protocol = (
+        (lock = 2 and agent = id -> 
+          (state = 1 and responder = 0 -> state <- 3; lock <-- 3)
+        )
+        ++
+        (agent != id ->
+            (lock = 0 -> 
+              (state != 2 -> agent, message, lock <-- id, state, 1)
+            )++
+            (lock = 1 ->
+              (message = 1 and state = 0 -> 
+                lock, responder <-- 2, state;
+                state <- 2; 
+                (lock = 3) -> agent, responder, lock <-- -1, -1, 0
+              ) ++ # YN -> yn
+              (   
+                (
+                  (message = 1 and state = 2 -> state <- 3) ++ # Yn -> Yy
+                  (message = 0 and state = 3 -> state <- 2) ++ # Ny -> Nn
+                  (message = 3 and state = 2 -> state <- 3) # yn -> yy
+                ); 
+                agent, lock <-- -1, 0)
+
+          ))); Protocol
+}
+
+agent Yes {
+    interface = state: 1
+  
+    Behavior = Protocol
+}
+
+agent No {
+    interface = state: 0
+  
+    Behavior = Protocol
+}
+
+check {
+    NoYConsensus = always exists Yes y, exists No n,
+    (state of y = 0 or state of y = 2)
+    or 
+    (state of n = 0 or state of n = 2)
+}

@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LabsCore\LabsCore.fsproj" />
+    <ProjectReference Include="..\LabsParser\LabsParser.fsproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Message.fs" />
+    <Compile Include="Outcome.fs" />
+    <Compile Include="Checks.fs" />
+    <Compile Include="Externs.fs" />
+    <Compile Include="STS.fs" />
+    <Compile Include="SymbolTable.fs" />
+    <Compile Include="Library.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FSharpPlus" Version="1.1.7" />
+  </ItemGroup>
+</Project>

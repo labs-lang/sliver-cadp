@@ -1,0 +1,22 @@
+system {
+    extern = _n
+    spawn = Node: _n
+}
+
+stigmergy Election {
+    link = true
+    leader: _n
+}
+
+agent Node {
+    stigmergies = Election
+    Behavior = leader > id -> leader <~ id; Behavior
+
+}
+
+check {
+    LeaderIs0 = finally forall Node n, leader of n = 0 # safe
+    LeaderIs100 = finally forall Node n, leader of n = 100 # safe (VACUOUS PASS)
+    LeaderNot0 = always exists Node n, leader of n != 0 # unsafe
+}
+

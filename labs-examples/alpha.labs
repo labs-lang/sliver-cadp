@@ -1,0 +1,46 @@
+system {
+    extern = _n, _size, _alpha
+    environment = occupancy[_size * _size]: 0
+    spawn = Agent: _n
+}
+
+# direction: 0=N, 1=E, 2=S, 3=W
+# motion: 0=Forward, 1=Coherence
+agent Agent {
+    interface = x: 0; y: 0; direction: [0, 1, 2, 3]; connected: 0; motion: 0
+    
+    Behavior = Move; Check; Update; Behavior
+    Move = 
+        (direction = 0 -> y <- (y + 1) % _size)
+        ++
+        (direction = 1 -> x <- (x + 1) % _size)
+        ++
+        (direction = 2 -> y <- (y - 1) % _size)
+        ++
+        (direction = 3 -> x <- (x - 1) % _size)
+    
+    Check = 
+        occupancy[x * _size + y] <-- min(occupancy[x * _size + y] + 1, _alpha + 1);
+        (
+            (occupancy[x * _size + y] >= _alpha + 1 -> connected <- 1)
+            ++
+            (occupancy[x * _size + y] < _alpha + 1 -> connected <- 0))
+    
+    Update = 
+        (
+            ((motion = 0 and connected = 1) or (motion = 1 and connected = 0) -> Skip)
+            ++
+            (motion = 0 and connected = 0 -> 
+                direction, motion <- (direction + 2) % 4, 1)
+            ++
+            (motion = 1 and connected = 1 -> 
+                (direction, motion <- (direction + 1) % 4, 0
+                ++
+                direction, motion <- (direction - 1) % 4, 0))
+        );
+        occupancy[x * _size + y] <-- 0
+}
+
+check {
+    Connectedness = finally exists Agent a, motion of a = 1
+}
