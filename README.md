@@ -14,13 +14,10 @@ Typically, a SLiVER release will contain the following files and directories:
 |Filename|Description
 |---------------------|----------------------------------|
 |`atlas/`, `cadp/`    |Files used by CADP backends|
-|`cbmc-simulator`     |CBMC5.4 binary|
-|`cseq/`              |CSeq analysis tool|
 |`examples/`          |Example LAbS specifications|
 |`labs/`              |LAbS parser and translator|
 |`HISTORY`            |Change log|
 |`LICENSE`            |The software license for SLiVER|
-|`LICENSE_cbmc`       |The software license for CBMC|
 |`README.md`          |This document|
 |`README.txt`         |Release-specific instructions|
 |`sliver.py`          |SLiVER command-line front-end|
