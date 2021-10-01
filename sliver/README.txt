@@ -42,22 +42,13 @@ To install SLiVER, please follow the steps below:
 
 To try SLiVER, please use the following command:
 
-    ./sliver.py --steps 12 --fair examples/boids-aw.labs birds=3 delta=13 grid=10
+    ./sliver.py --backend cadp examples/leader.labs n=3 --property LeaderIs0
 
 which should report that no property is violated.
 
 The following command should instead report that a property is violated:
 
-    ./sliver.py --steps 18 --fair examples/boids-aw.labs birds=4 delta=13 grid=10
-
-Use the --backend=<cbmc|cseq|esbmc|cadp|cadp-monitor> option to select a different
-verification backend. 
-Please keep in mind that:
-
-  1. We only bundled the CBMC executable as part of this package. Therefore,
-     cadp, cseq, or esbmc must be obtained separately.
-  2. Our counterexample translation does not support esbmc yet.
-
+    ./sliver.py --backend cadp examples/leader.labs n=3 --property LeaderNot0
 
 Invoking the tool without options:
 
