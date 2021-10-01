@@ -8,13 +8,9 @@ The SLiVER LAbS VERification tool
 
 atlas/, cadp/     Files used by cadp and cadp-monitor backend
 
-cseq/             CSeq analysis tool
-
 examples/         LAbS example specifications
 
 labs/             LAbS parser and translator
-
-cbmc-simulator    A build of CBMC 5.4
 
 HISTORY           SLiVER changelog
 
@@ -34,9 +30,7 @@ To install SLiVER, please follow the steps below:
 
     3. extract the entire package contents in /workspace
     
-    4. set execution permissions (chmod +x) for sliver.py and cbmc-simulator
-
-    5. optionally set execution permissions also for cseq/cseq.py (required to use the cseq backend)
+    4. set execution permissions (chmod +x) for sliver.py and labs/LabsTranslate
 
     * Usage *
 
@@ -49,6 +43,8 @@ which should report that no property is violated.
 The following command should instead report that a property is violated:
 
     ./sliver.py --backend cadp examples/leader.labs n=3 --property LeaderNot0
+
+Please keep in mind that CADP is not part of this package and must be obtained separately
 
 Invoking the tool without options:
 
