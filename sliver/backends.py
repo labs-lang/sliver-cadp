@@ -76,9 +76,9 @@ class Backend:
     def check_property_support(self, info):
         for p in info.properties:
             modality = p.split()[0]
-        if modality not in self.modalities:
-            log.error(f"""Backend '{self.name}' does not support "{modality}" modality.""")  # noqa: E501
-            return ExitStatus.BACKEND_ERROR
+            if modality not in self.modalities:
+                log.error(f"""Backend '{self.name}' does not support "{modality}" modality.""")  # noqa: E501
+                return ExitStatus.BACKEND_ERROR
         return ExitStatus.SUCCESS
 
     def generate_code(self, file, simulate, show):
@@ -163,6 +163,9 @@ class Backend:
     def verify(self, fname, info):
         """Verifies the correctness of the program at fname.
         """
+        if self.kwargs.get("no_properties") or not info.properties:
+            log.info("No property to verify!")
+            return ExitStatus.SUCCESS
         args = self.debug_args if self.kwargs["debug"] else self.args
         cmd = [self.command, *self.filename_argument(fname), *args]
         if self.kwargs.get("timeout", 0) > 0:
@@ -223,6 +226,9 @@ class CadpMonitor(Backend):
     def verify(self, fname, info):
         if not(self.check_cadp()):
             return ExitStatus.BACKEND_ERROR
+        if self.kwargs.get("no_properties"):
+            log.info("No property to verify!")
+            return ExitStatus.SUCCESS
         modality = info.properties[0].split()[0]
         mcl = "fairly.mcl" if modality == "finally" else "never.mcl"
         mcl = str(Path("cadp") / Path(mcl))
@@ -307,6 +313,10 @@ class Cadp(CadpMonitor):
     def verify(self, fname, info):
         if not(self.check_cadp()):
             return ExitStatus.BACKEND_ERROR
+        print(info.properties)
+        if self.kwargs.get("no_properties") or not info.properties:
+            log.info("No property to verify!")
+            return ExitStatus.SUCCESS
         mcl = translate_property(info)
         mcl_fname = self._mcl_fname(fname)
         log.debug(f"Writing MCL query to {mcl_fname}...")
