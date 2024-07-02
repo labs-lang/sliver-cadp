@@ -1,3 +1,7 @@
+**📦 Archived 📦**
+
+This repo is no longer maintained. All the features of SLiVER-CADP are available
+in [the SLiVER tool](https://github.com/labs-lang/sliver).
 
 #  SLiVER-CADP: model checking and simulation of stigmergic collective systems
 
